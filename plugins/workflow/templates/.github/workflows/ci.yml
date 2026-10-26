@@ -1,0 +1,48 @@
+name: CI
+
+# Runs scripts/verify.sh, the same check you and Claude run locally.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── Set up your toolchain here ─────────────────────────────────────────────
+      # - uses: actions/setup-node@v4
+      #   with: { node-version: 22, cache: npm }
+      # - run: npm ci
+      # ───────────────────────────────────────────────────────────────────────────
+
+      - name: Docs-only change?
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # Unknown base (first push, force push) → treat as a code change and run everything.
+          changed=$(git diff --name-only "$BASE_SHA" HEAD 2>/dev/null) || changed="unknown-base"
+          if echo "$changed" | grep -vE '\.md$|^docs/|^\.github/ISSUE_TEMPLATE/' | grep -q .; then
+            echo "docs=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "docs=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify (checks only)
+        if: steps.scope.outputs.docs == 'true'
+        run: scripts/verify.sh --docs
+
+      - name: Verify (tests + checks)
+        if: steps.scope.outputs.docs == 'false'
+        run: scripts/verify.sh

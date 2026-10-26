@@ -1,0 +1,25 @@
+{
+  "name": "claude-workflow",
+  "description": "Issue-based TDD workflow for Claude Code: one issue, one worktree, red tests, green code, one PR.",
+  "owner": {
+    "name": "Devansh Gulhane"
+  },
+  "version": "0.1.0",
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "workflow",
+      "source": "./plugins/workflow",
+      "displayName": "Issue Workflow",
+      "description": "/workflow:init sets a repo up; /workflow:start-issue N works one GitHub issue end to end with tests first; /workflow:ready lists what can start now.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Devansh Gulhane"
+      },
+      "category": "productivity",
+      "keywords": ["workflow", "tdd", "github-issues", "worktree", "pull-request"]
+    }
+  ]
+}

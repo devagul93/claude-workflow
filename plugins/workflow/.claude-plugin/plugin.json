@@ -1,0 +1,10 @@
+{
+  "name": "workflow",
+  "version": "0.1.0",
+  "description": "Issue-based TDD workflow: one GitHub issue = one worktree = one PR. Tests first, one verify script, Claude stops at a green PR.",
+  "author": {
+    "name": "Devansh Gulhane"
+  },
+  "keywords": ["workflow", "tdd", "github-issues", "worktree", "pull-request"],
+  "license": "MIT"
+}
